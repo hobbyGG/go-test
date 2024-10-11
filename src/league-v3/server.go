@@ -1,13 +1,21 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
 
+// 对应了json格式
+type Player struct {
+	Name string
+	Wins int
+}
+
 type PlayerStore interface {
 	GetPlayerScore(name string) int
 	RecordinWin(name string)
+	GetLeague() []Player
 }
 
 // 我们更改了 PlayerServer 的第二个属性，删除了命名属性 router http.ServeMux，并用 http.Handler 替换了它；这被称为 嵌入。
@@ -55,6 +63,7 @@ func (p *PlayerServer) processWin(w http.ResponseWriter, player string) {
 }
 
 func (p *PlayerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(p.store.GetLeague())
 	w.WriteHeader(http.StatusOK)
 }
 
