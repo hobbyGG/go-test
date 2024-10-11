@@ -12,21 +12,29 @@ type PlayerStore interface {
 
 type PlayerServer struct {
 	store PlayerStore
+	http.Handler
 }
 
-// 业务代码
-func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+// 新业务代码
+func NewPlayerServer(store PlayerStore) *PlayerServer {
+	p := new(PlayerServer)
+
+	p.store = store
 
 	router := http.NewServeMux()
-
-	// 根据路径多路复用，不同路径用不同的handler处理
 	router.Handle("/league", http.HandlerFunc(p.leagueHandler))
-
 	router.Handle("/players/", http.HandlerFunc(p.playersHandler))
 
-	// ServeMux也是一个handler
-	router.ServeHTTP(w, r)
+	p.Handler = router
+
+	return p
 }
+
+// 前业务代码
+// func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
+// 	p.router.ServeHTTP(w, r)
+// }
 
 func (p *PlayerServer) showScore(w http.ResponseWriter, player string) {
 	score := p.store.GetPlayerScore(player)
