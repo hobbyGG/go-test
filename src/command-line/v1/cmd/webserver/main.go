@@ -7,7 +7,7 @@ import (
 
 	// 导入本地包的方法。依据路径导入，起始路径是gomod所在位置，然后按文件路径访问即可
 	// poker "http-server/src/command-line/v1"
-	poker "github.com/hobbyGG/go-test/master/src/command-line/v1"
+	poker "github.com/quii/learn-go-with-tests/command-line/v1"
 )
 
 const dbFileName = "game.db.json"
